@@ -1,6 +1,79 @@
 <!DOCTYPE html>
-<object
-  type="text/html"
-  data="/.netlify/functions/server"
-  style="width:100%;height:100%;"
->
+<html>
+
+<head>
+        <link rel="stylesheet" href="https://unpkg.com/leaflet@1.4.0/dist/leaflet.css" integrity="sha512-puBpdR0798OZvTTbP4A8Ix/l+A4dHDD0DGqYW6RQ+9jxkRFclaxxQb/SJAWZfWAkuyeQUytO7+7N4QKrDh+drA==" crossorigin=""/>
+        <script src="https://unpkg.com/leaflet@1.4.0/dist/leaflet.js" integrity="sha512-QVftwZFqvtRNi0ZyCtsznlKSWOStnDORoefr1enyq5mVL4tmKB3S/EnC3rRJcxCPavG10IcrVGSmPh6Qw5lwrg==" crossorigin=""></script>
+</head>
+<style>
+#mapid { 
+    height: 780px; 
+    width: 1180px;
+    }
+
+    .thumbnail { 
+        height: 100px; 
+        width: 100px;
+    }
+</style>
+<body>
+
+<h1>My First Heading</h1>
+
+<div id="mapid"></div>
+<script>
+    var request = new XMLHttpRequest();
+
+    // Open a new connection, using the GET request on the URL endpoint
+    request.open('GET', 'https://elegant-shirley-2e9f77.netlify.com/.netlify/functions/server/house?quantity=15', true)
+
+    var mymap = L.map('mapid').setView([51.108, 17.038], 13);
+
+    L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
+        attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+        maxZoom: 18,
+        id: 'mapbox.streets',
+        accessToken: 'pk.eyJ1Ijoib2xob3RvcnRvIiwiYSI6ImNqdjN4Zm1zNDAwdHczeW8xYTB3NWczcDgifQ.M0FmN7RguHaSB4r_1iPNfQ'
+    }).addTo(mymap);
+
+    
+    request.onload = function () {
+        var data = JSON.parse(this.response);
+        data.forEach(ad => {
+            var location = L.latLng(ad.Location[0], ad.Location[1]);
+            console.log(location);
+
+            var marker = L.marker(ad.Location.split(','))
+            .bindPopup("<p>" + ad.Price + "</p>")
+            .addTo(mymap);
+        });
+    }
+
+
+    request.send();
+
+</script>
+
+<script>
+// Create a request variable and assign a new XMLHttpRequest object to it.
+var request = new XMLHttpRequest()
+
+// Open a new connection, using the GET request on the URL endpoint
+request.open('GET', 'https://elegant-shirley-2e9f77.netlify.com/.netlify/functions/server/house?quantity=15', true)
+// request.open('GET', 'https://localhost:3000/.netlify/functions/server/house?quantity=3', true)
+
+request.onload = function () {
+    var data = JSON.parse(this.response)
+
+    data.forEach(movie => {
+        var marker = L.marker([51.119, 17.051])
+        .bindPopup("<img src='https://apollo-ireland.akamaized.net/v1/files/eyJmbiI6IjB2bW43eGN4Zjd5Ni1BUEwiLCJ3IjpbeyJmbiI6ImoxajNvMTNtNmJnbjEtQVBMIiwicyI6IjE0IiwicCI6IjEwLC0xMCIsImEiOiIwIn1dfQ.HfaoTbezsuU-_-Sg5OiGGaTxGoLAjUsTVJoW_6I9pdY/image;s=655x491;q=80' class='thumbnail'></img>")
+        .addTo(mymap);
+    })
+}
+
+request.send()
+
+</script>
+</body> 
+</html>

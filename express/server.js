@@ -16,17 +16,21 @@ router.get('/', (req, res) => {
   res.write('<h1>Personalized message!</h1>');
   res.end();
 });
+
 router.get('/another', (req, res) => res.json({ route: req.originalUrl }));
+
 router.get('/house', (req, res, next) => {
   
   var list = [];
   var quantity = parseInt(req.param('quantity'), 10);
 
+  res.writeHead(200, { 'Content-Type': 'text/html' });
+
   client.connect( err => {
     assert.equal(null, err);
 
     var collection = client.db("test").collection("houses");
-    var houses = collection.find({}).sort({"modified": -1.0}).limit(quantity); 
+    var houses = collection.find({}).sort({"Modified": -1.0}).limit(quantity); 
 
     houses.forEach( (doc,err) => {
       assert.equal(null, err);
