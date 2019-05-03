@@ -19,12 +19,14 @@ router.get('/', (req, res) => {
 router.get('/another', (req, res) => res.json({ route: req.originalUrl }));
 router.get('/house', (req, res) => {
   
+  var quantity = parseInt(req.param('quantity'), 10);
+
   client.connect( err => {
     assert.equal(null, err);
 
     var list = [];
     var collection = client.db("test").collection("houses");
-    var houses = collection.find({}).limit(2); 
+    var houses = collection.find({}).sort({"modified": -1.0}).limit(quantity); 
 
     houses.forEach( (doc,err) => {
       assert.equal(null, err);
@@ -32,8 +34,7 @@ router.get('/house', (req, res) => {
     }, () => {
       client.close();
       res.json(list);
-    });
-    
+    }); 
     
   });
 
