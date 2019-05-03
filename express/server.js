@@ -17,14 +17,14 @@ router.get('/', (req, res) => {
   res.end();
 });
 router.get('/another', (req, res) => res.json({ route: req.originalUrl }));
-router.get('/house', (req, res) => {
+router.get('/house', (req, res, next) => {
   
+  var list = [];
   var quantity = parseInt(req.param('quantity'), 10);
 
   client.connect( err => {
     assert.equal(null, err);
 
-    var list = [];
     var collection = client.db("test").collection("houses");
     var houses = collection.find({}).sort({"modified": -1.0}).limit(quantity); 
 
@@ -32,7 +32,7 @@ router.get('/house', (req, res) => {
       assert.equal(null, err);
       list.push(doc);
     }, () => {
-      client.close();
+      // client.close();
       res.json(list);
     }); 
     
