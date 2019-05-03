@@ -32,8 +32,6 @@ router.get('/house', (req, res, next) => {
       assert.equal(null, err);
       list.push(doc);
     }, () => {
-      // client.close();
-      res.set("Access-Control-Allow-Origin", "https://elegant-shirley-2e9f77.netlify.com");
       res.json(list);
     }); 
     
@@ -43,6 +41,12 @@ router.get('/house', (req, res, next) => {
 
 router.post('/', (req, res) => res.json({ postBody: req.body }));
 
+app.use((req, res, next) => {
+  res.append('Access-Control-Allow-Origin', ['*']);
+  res.append('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
+  res.append('Access-Control-Allow-Headers', 'Content-Type');
+  next();
+});
 app.use(bodyParser.json());
 app.use('/.netlify/functions/server', router);  // path must route to lambda
 
