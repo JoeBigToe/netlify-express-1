@@ -33,6 +33,7 @@ router.get('/house', (req, res, next) => {
       list.push(doc);
     }, () => {
       // client.close();
+      res.set("Access-Control-Allow-Origin", "https://elegant-shirley-2e9f77.netlify.com");
       res.json(list);
     }); 
     
