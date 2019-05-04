@@ -14,7 +14,7 @@
     <div id="mapid"></div>
 </div>
 
-<div class="right center"></div>
+<div id="details" class="right center"></div>
 
 <script>
     var request = new XMLHttpRequest();
@@ -36,16 +36,17 @@
         var data = JSON.parse(this.response);
         data.forEach(ad => {
             var location = L.latLng(ad.Location[0], ad.Location[1]);
-            console.log(location);
 
             var marker = L.marker(ad.Location.split(','))
             .bindPopup("<p>" + ad.Price + "</p>")
             .addTo(mymap);
 
-            marker.on('click', ad => {
-              document.getElementById("right center").innerHTML = `
+            marker.on('click', () => {
+              document.getElementById("details").innerHTML = `
               <div class='card'>
-                <img src='${ad.Thumbnail}' >
+                <a href='${ad.Link}'>
+                  <img src='${ad.Thumbnail}' >
+                </a>
                 <div class='container'>
                   <h4><b>${ad.Price}</b></h4> 
                   <p>Size: ${ad.Size} m/2</p> 
