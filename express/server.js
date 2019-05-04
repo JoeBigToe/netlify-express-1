@@ -24,8 +24,6 @@ router.get('/house', (req, res, next) => {
   var list = [];
   var quantity = parseInt(req.param('quantity'), 10);
 
-  res.writeHead(200, { 'Content-Type': 'text/html' });
-
   client.connect( err => {
     assert.equal(null, err);
 
