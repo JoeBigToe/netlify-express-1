@@ -20,7 +20,7 @@
     var request = new XMLHttpRequest();
 
     // Open a new connection, using the GET request on the URL endpoint
-    request.open('GET', 'https://elegant-shirley-2e9f77.netlify.com/.netlify/functions/server/house?quantity=30', true)
+    request.open('GET', 'https://house-spotter.netlify.com/.netlify/functions/server/house?quantity=30', true)
 
     var mymap = L.map('mapid').setView([51.108, 17.038], 13);
 
@@ -38,7 +38,6 @@
             var location = L.latLng(ad.Location[0], ad.Location[1]);
 
             var marker = L.marker(ad.Location.split(','))
-            .bindPopup("<p>" + ad.Price + "</p>")
             .addTo(mymap);
 
             marker.on('click', () => {
