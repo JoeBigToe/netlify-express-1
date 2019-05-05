@@ -1,64 +1,40 @@
 <!DOCTYPE html>
 <html>
 
-<head>
-        <link rel="stylesheet" href="https://unpkg.com/leaflet@1.4.0/dist/leaflet.css" integrity="sha512-puBpdR0798OZvTTbP4A8Ix/l+A4dHDD0DGqYW6RQ+9jxkRFclaxxQb/SJAWZfWAkuyeQUytO7+7N4QKrDh+drA==" crossorigin=""/>
-        <link rel="stylesheet" href="stylesheet/style.css"/>
-        <script src="https://unpkg.com/leaflet@1.4.0/dist/leaflet.js" integrity="sha512-QVftwZFqvtRNi0ZyCtsznlKSWOStnDORoefr1enyq5mVL4tmKB3S/EnC3rRJcxCPavG10IcrVGSmPh6Qw5lwrg==" crossorigin=""></script>
-</head>
-<body>
+  <head>
+    <meta charset="utf-8"/> 
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.4.0/dist/leaflet.css" integrity="sha512-puBpdR0798OZvTTbP4A8Ix/l+A4dHDD0DGqYW6RQ+9jxkRFclaxxQb/SJAWZfWAkuyeQUytO7+7N4QKrDh+drA==" crossorigin=""/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="stylesheet/style.css"/>
+    <link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Roboto'>
 
-<h1>My First Heading</h1>
+    <script src="https://unpkg.com/leaflet@1.4.0/dist/leaflet.js" integrity="sha512-QVftwZFqvtRNi0ZyCtsznlKSWOStnDORoefr1enyq5mVL4tmKB3S/EnC3rRJcxCPavG10IcrVGSmPh6Qw5lwrg==" crossorigin=""></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+  </head>
+  <body>
 
-<div class="left">
-    <div id="mapid"></div>
-</div>
+    <div class="left">
+        <div id="mapid"></div>
+    </div>
 
-<div id="details" class="right center"></div>
+    <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLongTitle"></h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body" id="modal-body-picture"></div>
+          <div class="modal-body" id="modal-body-content"></div>
+          <div class="modal-footer"></div>
+        </div>
+      </div>
+    </div>
 
-<script>
-    var request = new XMLHttpRequest();
+    <script src="static\javascript\map.js"></script>
 
-    // Open a new connection, using the GET request on the URL endpoint
-    request.open('GET', 'https://angry-mcclintock-48fbfa.netlify.com/.netlify/functions/server/house?quantity=30', true)
-
-    var mymap = L.map('mapid').setView([51.108, 17.038], 13);
-
-    L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
-        attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
-        maxZoom: 18,
-        id: 'mapbox.streets',
-        accessToken: 'pk.eyJ1Ijoib2xob3RvcnRvIiwiYSI6ImNqdjN4Zm1zNDAwdHczeW8xYTB3NWczcDgifQ.M0FmN7RguHaSB4r_1iPNfQ'
-    }).addTo(mymap);
-
-    
-    request.onload = function () {
-        var data = JSON.parse(this.response);
-        data.forEach(ad => {
-            var location = L.latLng(ad.Location[0], ad.Location[1]);
-
-            var marker = L.marker(ad.Location.split(','))
-            .addTo(mymap);
-
-            marker.on('click', () => {
-              document.getElementById("details").innerHTML = `
-              <div class='card'>
-                <a href='${ad.Link}'>
-                  <img src='${ad.Thumbnail}' >
-                </a>
-                <div class='container'>
-                  <h4><b>${ad.Price}</b></h4> 
-                  <p>Size: ${ad.Size} m/2</p> 
-                </div>
-              </div>`;
-            });
-        });
-    }
-
-
-    request.send();
-
-</script>
-
-</body> 
+  </body> 
 </html>
