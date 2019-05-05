@@ -1,7 +1,7 @@
 var request = new XMLHttpRequest();
 
 // Open a new connection, using the GET request on the URL endpoint
-request.open('GET', 'https://angry-mcclintock-48fbfa.netlify.com/.netlify/functions/server/house?quantity=50', true)
+request.open('GET', 'https://angry-mcclintock-48fbfa.netlify.com/.netlify/functions/server/house/50', true)
 
 var mymap = L.map('mapid').setView([51.108, 17.038], 13);
 

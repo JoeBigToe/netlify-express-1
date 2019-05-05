@@ -19,10 +19,10 @@ router.get('/', (req, res) => {
 
 router.get('/another', (req, res) => res.json({ route: req.originalUrl }));
 
-router.get('/house', (req, res, next) => {
+router.get('/house/:quantity', (req, res, next) => {
   
   var list = [];
-  var quantity = parseInt(req.param('quantity'), 10);
+  var quantity = parseInt(req.params.quantity, 10);
 
   client.connect( err => {
     assert.equal(null, err);
