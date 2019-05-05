@@ -12,27 +12,23 @@ L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={
     accessToken: 'pk.eyJ1Ijoib2xob3RvcnRvIiwiYSI6ImNqdjN4Zm1zNDAwdHczeW8xYTB3NWczcDgifQ.M0FmN7RguHaSB4r_1iPNfQ'
 }).addTo(mymap);
 
+var newIcon = L.icon({
+    iconUrl: 'static/images/red-marker.png',
+    iconSize: [27, 41],
+    iconAnchor: [13, 41]
+});
+
 
 request.onload = function () {
     var data = JSON.parse(this.response);
     data.forEach(ad => {
-        var location = L.latLng(ad.Location[0], ad.Location[1]);
 
-        var marker = L.marker(ad.Location.split(','))
-        .addTo(mymap);
-
-        // marker.on('click', () => { 
-        //     document.getElementById("details").innerHTML = `
-        //     <div class='card'>
-        //     <a href='${ad.Link}'>
-        //         <img src='${ad.Thumbnail}' >
-        //     </a>
-        //     <div class='container'>
-        //         <h4><b>${ad.Price}</b></h4> 
-        //         <p>Size: ${ad.Size} m/2</p> 
-        //     </div>
-        //     </div>`;
-        // });
+        if (ad.NewAd === 1) {
+            // var marker = L.marker(ad.Location.split(','), {icon: newIcon}).addTo(mymap);;
+            var marker = L.marker(ad.Location.split(',')).addTo(mymap);;
+        } else {
+            var marker = L.marker(ad.Location.split(',')).addTo(mymap);;
+        }
 
         marker.on('click', () => {
             
@@ -59,6 +55,7 @@ request.onload = function () {
             
             $('#exampleModalCenter').modal('show');
         });
+
     });
 }
 
