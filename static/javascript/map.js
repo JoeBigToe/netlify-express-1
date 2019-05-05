@@ -1,9 +1,17 @@
 var request = new XMLHttpRequest();
+var url = 'https://angry-mcclintock-48fbfa.netlify.com';
+// var url = 'http://localhost:3000';
 
 // Open a new connection, using the GET request on the URL endpoint
-request.open('GET', 'https://angry-mcclintock-48fbfa.netlify.com/.netlify/functions/server/house/50', true)
+request.open('GET', `${url}/.netlify/functions/server/house/50`, true);
+
 
 var mymap = L.map('mapid').setView([51.108, 17.038], 13);
+var newIcon = L.icon({
+    iconUrl: 'static/images/green-marker.png',
+    iconSize: [32, 41],
+    iconAnchor: [16, 40]
+});
 
 L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
     attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
@@ -12,22 +20,24 @@ L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={
     accessToken: 'pk.eyJ1Ijoib2xob3RvcnRvIiwiYSI6ImNqdjN4Zm1zNDAwdHczeW8xYTB3NWczcDgifQ.M0FmN7RguHaSB4r_1iPNfQ'
 }).addTo(mymap);
 
-var newIcon = L.icon({
-    iconUrl: 'static/images/red-marker.png',
-    iconSize: [27, 41],
-    iconAnchor: [13, 41]
-});
 
+function markAsRead(id, url) {
+    var update_request = new XMLHttpRequest();
+
+    update_request.open('PUT', `${url}/.netlify/functions/server/house/${id}`, true);
+    update_request.send();
+
+}
 
 request.onload = function () {
     var data = JSON.parse(this.response);
     data.forEach(ad => {
 
         if (ad.NewAd === 1) {
-            // var marker = L.marker(ad.Location.split(','), {icon: newIcon}).addTo(mymap);;
-            var marker = L.marker(ad.Location.split(',')).addTo(mymap);;
+            var marker = L.marker(ad.Location.split(','), {icon: newIcon}).addTo(mymap);
+            // var marker = L.marker(ad.Location.split(',')).addTo(mymap);
         } else {
-            var marker = L.marker(ad.Location.split(',')).addTo(mymap);;
+            var marker = L.marker(ad.Location.split(',')).addTo(mymap);
         }
 
         marker.on('click', () => {
@@ -43,6 +53,8 @@ request.onload = function () {
             `
 
             var footer_content = `
+            <button type="button" class="btn btn-secondary">Delete</button>
+            <button type="button" onClick="markAsRead('${ad._id}', '${url}')" class="btn btn-secondary">Mark as Read</button>
             <a href="${ad.Link}">    
                 <button type="button" class="btn btn-secondary">Open</button>
             </a>

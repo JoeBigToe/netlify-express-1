@@ -7,6 +7,7 @@ const MongoClient = require('mongodb').MongoClient;
 const uri = "mongodb+srv://ps-user:Qs1.2011@houses-cluster-rhxbl.mongodb.net/test?retryWrites=true";
 const client = new MongoClient(uri, { useNewUrlParser: true });
 
+var ObjectId = require('mongodb').ObjectID;
 var assert = require('assert');
 
 const router = express.Router();
@@ -41,7 +42,50 @@ router.get('/house/:quantity', (req, res, next) => {
 
 });
 
-router.post('/', (req, res) => res.json({ postBody: req.body }));
+router.put('/house/:id', (req, res) => {
+
+  client.connect( err => {
+    assert.equal(null, err);
+
+    var collection = client.db("test").collection("houses");
+
+    var query = { _id: ObjectId(req.params.id)};
+    var newValue = { $set: { NewAd: 0 } };
+
+    collection.updateOne( query, newValue, (err, res) => {
+      assert.equal(null, err);
+      console.log("1 record updated successfully!");
+    });
+    
+  });
+  
+  // res.end();
+  res.json([]);
+
+});
+
+router.put('/house/delete/:id', (req, res) => {
+
+  client.connect( err => {
+    assert.equal(null, err);
+
+    var collection = client.db("test").collection("houses");
+
+    var query = { _id: ObjectId(req.params.id)};
+    var newValue = { $set: { NewAd: 0 } };
+
+    collection.updateOne( query, newValue, (err, res) => {
+      assert.equal(null, err);
+      console.log("1 record updated successfully!");
+    });
+    
+  });
+  
+  // res.end();
+  res.json([]);
+
+});
+
 
 app.use((req, res, next) => {
   res.append('Access-Control-Allow-Origin', ['*']);
