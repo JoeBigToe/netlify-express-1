@@ -1,5 +1,5 @@
 var request = new XMLHttpRequest();
-var url = 'https://angry-mcclintock-48fbfa.netlify.com';
+var url = 'www.house-bubbler.com';
 // var url = 'http://localhost:3000';
 
 // Open a new connection, using the GET request on the URL endpoint
