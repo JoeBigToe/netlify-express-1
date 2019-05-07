@@ -66,18 +66,24 @@ router.put('/house/:id', (req, res) => {
 
 router.put('/house/delete/:id', (req, res) => {
 
+  var query = { _id : ObjectId(req.params.id)};
+
   client.connect( err => {
     assert.equal(null, err);
 
-    var collection = client.db("test").collection("houses");
-
-    var query = { _id: ObjectId(req.params.id)};
-    var newValue = { $set: { NewAd: 0 } };
-
-    collection.updateOne( query, newValue, (err, res) => {
+    var collectionFrom = client.db("test").collection("houses");
+    var collectionTo = client.db("test").collection("old-houses");
+    
+    collectionFrom.findOne( query , (err, res) => {
       assert.equal(null, err);
-      console.log("1 record updated successfully!");
-    });
+      // Insert house in collectionTo
+      collectionTo.insertOne( res, (err, res) => {
+        assert.equal(null, err);
+        // Remove house from collectionFrom
+        collectionFrom.deleteOne( query, err => { assert.equal(null, err); });      
+      });
+
+    }); 
     
   });
   

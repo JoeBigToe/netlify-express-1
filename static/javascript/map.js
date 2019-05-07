@@ -2,16 +2,12 @@ var request = new XMLHttpRequest();
 var url = 'https://house-bubbler.com';
 // var url = 'http://localhost:3000';
 
+var markersMap = [];
 // Open a new connection, using the GET request on the URL endpoint
 request.open('GET', `${url}/.netlify/functions/server/house/50`, true);
 
 
 var mymap = L.map('mapid').setView([51.108, 17.038], 13);
-var newIcon = L.icon({
-    iconUrl: 'static/images/green-marker.png',
-    iconSize: [32, 41],
-    iconAnchor: [16, 40]
-});
 
 L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
     attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
@@ -21,12 +17,36 @@ L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={
 }).addTo(mymap);
 
 
-function markAsRead(id, url) {
+function markAsRead(id) {
     var update_request = new XMLHttpRequest();
 
     update_request.open('PUT', `${url}/.netlify/functions/server/house/${id}`, true);
+    
+    update_request.onload = function () {
+        var marker = markersMap[id];
+        marker.options.icon = blueIcon;
+
+        mymap.removeLayer(markersMap[id]);
+        marker.addTo(mymap);
+    }
+
     update_request.send();
 
+}
+
+function markAsDeleted(id) {
+    
+    var update_request = new XMLHttpRequest();
+
+    update_request.open('PUT', `${url}/.netlify/functions/server/house/delete/${id}`, true);
+    
+    update_request.onload = function () {
+        
+        mymap.removeLayer(markersMap[id]);
+        
+    }
+    
+    update_request.send();
 }
 
 request.onload = function () {
@@ -34,16 +54,20 @@ request.onload = function () {
     data.forEach(ad => {
 
         if (ad.NewAd === 1) {
-            var marker = L.marker(ad.Location.split(','), {icon: newIcon}).addTo(mymap);
+            var marker = L.marker(ad.Location.split(','), {icon: greenIcon}).addTo(mymap);
             // var marker = L.marker(ad.Location.split(',')).addTo(mymap);
         } else {
-            var marker = L.marker(ad.Location.split(',')).addTo(mymap);
+            var marker = L.marker(ad.Location.split(','), {icon: blueIcon}).addTo(mymap);
         }
 
+        markersMap[ad._id] = marker;
+
         marker.on('click', () => {
-            
+
             var picture_content = `
-            <img src="${ad.Thumbnail}" />
+            <a href="${ad.Link}">    
+                <img src="${ad.Thumbnail}" />
+            </a>
             `
 
             var body_content = `
@@ -53,8 +77,8 @@ request.onload = function () {
             `
 
             var footer_content = `
-            <button type="button" class="btn btn-secondary">Delete</button>
-            <button type="button" onClick="markAsRead('${ad._id}', '${url}')" class="btn btn-secondary">Mark as Read</button>
+            <button type="button" onClick="markAsDeleted('${ad._id}')" class="btn btn-secondary">Delete</button>
+            <button type="button" onClick="markAsRead('${ad._id}')" class="btn btn-secondary">Mark as Read</button>
             <a href="${ad.Link}">    
                 <button type="button" class="btn btn-secondary">Open</button>
             </a>
