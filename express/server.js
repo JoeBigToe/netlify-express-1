@@ -64,7 +64,7 @@ router.put('/house/:id', (req, res) => {
 
 });
 
-router.put('/house/delete/:id', (req, res) => {
+router.put('/delete/:id', (req, res) => {
 
   var query = { _id : ObjectId(req.params.id)};
 

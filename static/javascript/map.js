@@ -38,7 +38,7 @@ function markAsDeleted(id) {
     
     var update_request = new XMLHttpRequest();
 
-    update_request.open('PUT', `${url}/.netlify/functions/server/house/delete/${id}`, true);
+    update_request.open('PUT', `${url}/.netlify/functions/server/delete/${id}`, true);
     
     update_request.onload = function () {
         
