@@ -66,11 +66,12 @@ router.put('/house/:id', (req, res) => {
 
 router.put('/delete/:id', (req, res) => {
 
+  var query = { _id : ObjectId(req.params.id)};
+  console.log("Requested the deletion of document with id: " + req.params.id);
   
   client.connect( err => {
     assert.equal(null, err);
     
-    var query = { _id : ObjectId(req.params.id)};
     var collectionFrom = client.db("test").collection("houses");
     var collectionTo = client.db("test").collection("old-houses");
     
