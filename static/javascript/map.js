@@ -60,7 +60,7 @@ request.onload = function () {
             var marker = L.marker(ad.Location.split(','), {icon: blueIcon}).addTo(mymap);
         }
 
-        markersMap[ad._id] = marker;
+        markersMap[ad.Id] = marker;
 
         marker.on('click', () => {
 
@@ -77,8 +77,8 @@ request.onload = function () {
             `
 
             var footer_content = `
-            <button type="button" onClick="markAsDeleted('${ad._id}')" class="btn btn-secondary">Delete</button>
-            <button type="button" onClick="markAsRead('${ad._id}')" class="btn btn-secondary">Mark as Read</button>
+            <button type="button" onClick="markAsDeleted('${ad.Id}')" class="btn btn-secondary">Delete</button>
+            <button type="button" onClick="markAsRead('${ad.Id}')" class="btn btn-secondary">Mark as Read</button>
             <a href="${ad.Link}">    
                 <button type="button" class="btn btn-secondary">Open</button>
             </a>
