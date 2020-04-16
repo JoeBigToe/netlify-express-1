@@ -64,7 +64,7 @@ router.post('/house/:id', (req, res) => {
 
 });
 
-router.put('/delete/:id', (req, res) => {
+router.delete('/delete/:id', (req, res) => {
 
   var query = { _id : ObjectId(req.params.id)};
   console.log("Requested the deletion of document with id: " + req.params.id);
