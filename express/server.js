@@ -42,7 +42,7 @@ router.get('/house/:quantity', (req, res, next) => {
 
 });
 
-router.put('/house/:id', (req, res) => {
+router.post('/house/:id', (req, res) => {
 
   client.connect( err => {
     assert.equal(null, err);

@@ -20,7 +20,7 @@ L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={
 function markAsRead(id) {
     var update_request = new XMLHttpRequest();
 
-    update_request.open('PUT', `${url}/.netlify/functions/server/house/${id}`, true);
+    update_request.open('POST', `${url}/.netlify/functions/server/house/${id}`, true);
     
     update_request.onload = function () {
         var marker = markersMap[id];
