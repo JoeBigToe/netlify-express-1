@@ -49,7 +49,7 @@ router.put('/house/:id', (req, res) => {
 
     var collection = client.db("test").collection("houses");
 
-    var query = { Id: req.params.id};
+    var query = { _id: ObjectId(req.params.id)};
     var newValue = { $set: { NewAd: 0 } };
 
     collection.updateOne( query, newValue, (err, res) => {
@@ -64,26 +64,9 @@ router.put('/house/:id', (req, res) => {
 
 });
 
-router.post('/insert', (req,res) => {
-
-  var documents = req.body
-  console.log("Received a request to insert " + req.body.length + " documents");
-
-  client.connect( err => {
-    assert.equal(null, err);
-    var collection = client.db("test").collection("houses");
-
-    collection.insertMany(documents, (err, result) => {
-      assert.equal(null, err);
-      res.end();
-    });
-
-  });
-});
-
 router.put('/delete/:id', (req, res) => {
 
-  var query = { Id : req.params.id};
+  var query = { _id : ObjectId(req.params.id)};
   console.log("Requested the deletion of document with id: " + req.params.id);
   
   client.connect( err => {
