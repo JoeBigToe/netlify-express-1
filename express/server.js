@@ -4,8 +4,7 @@ const serverless = require('serverless-http');
 const app = express();
 const bodyParser = require('body-parser');
 const MongoClient = require('mongodb').MongoClient;
-const uri = "mongodb+srv://ps-user:Qs1.2011@houses-cluster-rhxbl.mongodb.net/test?retryWrites=true";
-const client = new MongoClient(uri, { useNewUrlParser: true });
+const uri = "mongodb+srv://ps-user:Qs1.2011@houses-cluster-rhxbl.mongodb.net/test?retryWrites=true&w=majority";
 
 var ObjectId = require('mongodb').ObjectID;
 var assert = require('assert');
@@ -25,16 +24,17 @@ router.get('/house/:quantity', (req, res, next) => {
   var list = [];
   var quantity = parseInt(req.params.quantity, 10);
 
-  client.connect( err => {
+  MongoClient.connect( uri, { useNewUrlParser: true }, (err, db) => {
     assert.equal(null, err);
 
-    var collection = client.db("test").collection("houses");
+    var collection = db.db("test").collection("houses");
     var houses = collection.find({}).sort({"Modified": -1.0}).limit(quantity); 
 
     houses.forEach( (doc,err) => {
       assert.equal(null, err);
       list.push(doc);
     }, () => {
+      db.close();
       res.json(list);
     }); 
     
@@ -44,24 +44,25 @@ router.get('/house/:quantity', (req, res, next) => {
 
 router.post('/house/:id', (req, res) => {
 
-  client.connect( err => {
+  MongoClient.connect( uri, { useNewUrlParser: true }, (err, db) => {
     assert.equal(null, err);
 
-    var collection = client.db("test").collection("houses");
+    var collection = db.db("test").collection("houses");
 
     var query = { _id: ObjectId(req.params.id)};
     var newValue = { $set: { NewAd: 0 } };
 
-    collection.updateOne( query, newValue, (err, res) => {
+    collection.updateOne( query, newValue, (err) => {
       assert.equal(null, err);
       console.log("1 record updated successfully!");
+      db.close();
+
+      res.send("OK");
+      
     });
     
   });
   
-  // res.end();
-  res.json([]);
-
 });
 
 router.delete('/delete/:id', (req, res) => {
@@ -69,11 +70,11 @@ router.delete('/delete/:id', (req, res) => {
   var query = { _id : ObjectId(req.params.id)};
   console.log("Requested the deletion of document with id: " + req.params.id);
   
-  client.connect( err => {
+  MongoClient.connect( uri, { useNewUrlParser: true }, (err, db) => {
     assert.equal(null, err);
     
-    var collectionFrom = client.db("test").collection("houses");
-    var collectionTo = client.db("test").collection("old-houses");
+    var collectionFrom = db.db("test").collection("houses");
+    var collectionTo = db.db("test").collection("old-houses");
     
     collectionFrom.findOne( query , (err, res) => {
       assert.equal(null, err);
@@ -86,6 +87,7 @@ router.delete('/delete/:id', (req, res) => {
         collectionFrom.deleteOne( query, (err, res) => { 
           assert.equal(null, err); 
           console.log("Result of the deletion: " + res.result.ok);
+          db.close();
         });      
       });
     });     
