@@ -4,7 +4,7 @@ var url = 'https://house-bubbler.com';
 
 var markersMap = [];
 // Open a new connection, using the GET request on the URL endpoint
-request.open('GET', `${url}/.netlify/functions/server/house/50`, true);
+request.open('GET', `${url}/.netlify/functions/server/house/200`, true);
 
 
 var mymap = L.map('mapid').setView([51.108, 17.038], 13);
